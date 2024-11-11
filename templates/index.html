@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How Many Yodas?</title>
+    <style>
+        @font-face {
+            font-family: 'Starjedi';
+            src: url('static/Starjedi.ttf') format('truetype');
+        }
+
+        h1 {
+            font-size: 30px;
+            padding-left: 30px;
+            font-family: 'Starjedi', sans-serif;
+            color: #ffe81f;
+            -webkit-text-fill-color: black;
+            -webkit-text-stroke: 1px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-family: 'Franklin Gothic Book', sans-serif;
+            color: #ffe81f;
+        }
+
+        body {
+            background: black;
+            color: white;
+        }
+
+        a:link {
+            color: #EBDC41;
+        }
+
+        a:visited {
+            color: #E38517;
+        }
+
+        /* Dropdown styles */
+        .dropdown {
+            margin-left: 30px;
+            padding-left: 5px;
+            font-size: 18px;
+            color: white;
+            background: black;
+        }
+
+        .result {
+            margin-left: 30px;
+            font-size: 18px;
+            color: #EBDC41;
+        }
+
+        .yoda-img {
+            height: 198px; /* Fixed height for full Yoda */
+            width: auto; /* Maintain aspect ratio */
+            padding-bottom: 10px;
+        }
+
+        .yoda-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .yoda-partial {
+            overflow: hidden;
+            width: 198px; /* Same width as full Yoda */
+            height: 198px; /* Fixed height for cropping */
+            position: relative;
+        }
+
+        .yoda-partial img {
+            position: absolute;
+            bottom: 0; /* Align the image to the bottom */
+            width: 100%; /* Full width of the container */
+            height: auto; /* Maintain aspect ratio */
+            max-height: none; /* Remove max height */
+            transform: translateY(0); /* No translation */
+        }
+    </style>
+</head>
+<body>
+    <h1>How Many Yodas?</h1>
+
+    <form action="/" method="get">
+        <select name="character" class="dropdown" onchange="this.form.submit()">
+            <option value="" disabled selected>Select a character</option>
+            {% for name, yodas in people.items() %}
+                <option value="{{ name }}" {% if selected_character == name %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    {% if selected_character %}
+        <div class="result">
+            <h2>{{ selected_character }}'s Info:</h2>
+            <h2>{{ yodas_tall }} Yodas Tall</h2>
+
+            <!-- Display Yoda images based on the number of Yodas tall -->
+            <div class="yoda-stack">
+                {% for i in range(yodas_tall|int) %}
+                    <img src="{{ url_for('static', filename='yoda.png') }}" class="yoda-img" alt="Yoda">
+                {% endfor %}
+
+                <!-- Display a partial Yoda image for the fractional part -->
+                {% if yodas_tall % 1 > 0 %}
+                    <div class="yoda-partial">
+                        <img src="{{ url_for('static', filename='yoda.png') }}" alt="Yoda" style="height: auto; width: 100%; transform: translateY(-{{ 66 * (1 - (yodas_tall % 1)) }}px);">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>
+
+
+
+
