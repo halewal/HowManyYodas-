@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ person['name'] }}'s Profile</title>
+    <style>
+        .yoda-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .yoda-img {
+            height: auto;
+            width: 66px; /* Assuming Yoda's height corresponds to 66 pixels */
+        }
+        .yoda-partial {
+            overflow: hidden;
+            width: 66px; /* Same width as full Yoda */
+            height: 66px; /* Fixed height for cropping */
+        }
+        .yoda-partial img {
+            height: calc(66px * {{ height_in_yodas % 1 }}); /* Adjust the height for the fractional part */
+            width: auto; /* Maintain aspect ratio */
+            transform: translateY(-50%); /* Center the cropped image */
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ person['name'] }}'s Profile</h1>
+    <p><strong>Height:</strong> {{ person['height'] }} cm</p>
+    <p><strong>Mass:</strong> {{ person['mass'] }} kg</p>
+    <p><strong>Gender:</strong> {{ person['gender'] }}</p>
+    <p><strong>How Many Yodas Tall:</strong> {{ height_in_yodas }} Yodas</p>
+
+    <!-- Display Yoda images -->
+    <div class="yoda-stack">
+        {% for i in range(height_in_yodas|int) %}
+            <img src="{{ url_for('static', filename='yoda.png') }}" class="yoda-img" alt="Yoda">
+        {% endfor %}
+
+        <!-- Display a partial Yoda image for the fractional part -->
+        {% if height_in_yodas % 1 > 0 %}
+            <div class="yoda-partial">
+                <img src="{{ url_for('static', filename='yoda.png') }}" class="yoda-img" alt="Yoda" style="height: calc(66px * {{ height_in_yodas % 1 }});">
+            </div>
+        {% endif %}
+    </div>
+
+    <a href="/">Back to list</a>
+</body>
+</html>
+
+
